@@ -1,6 +1,5 @@
 <?php
 
-
 /**
  * fetch_url_contents - a simple js to php proxy function to get cross domain content.
  *
@@ -10,8 +9,11 @@
  * @url        https://github.com/aheinze/fetch_url_contents
  */
 
-function fetch_url_contents ($url) {
+if (isset($_REQUEST['url'])) {
+
+    $url     = $_REQUEST['url'];
     $content = '';
+
     if (function_exists('curl_exec')){
         $conn = curl_init($url);
         curl_setopt($conn, CURLOPT_SSL_VERIFYPEER, true);
@@ -21,7 +23,7 @@ function fetch_url_contents ($url) {
         curl_setopt($conn, CURLOPT_AUTOREFERER, true);
         curl_setopt($conn, CURLOPT_FOLLOWLOCATION, 1);
         curl_setopt($conn, CURLOPT_VERBOSE, 0);
-        $content = (curl_exec($conn));
+        $content = curl_exec($conn);
         curl_close($conn);
     }
     if (!$content && function_exists('file_get_contents')){
@@ -31,11 +33,12 @@ function fetch_url_contents ($url) {
         $handle  = @fopen ($url, "r");
         $content = @stream_get_contents($handle);
     }
-    return $content;
-}
 
-if (isset($_REQUEST['url'])) {
-    return print(fetch_url_contents($_REQUEST['url']));
+    if (!$content) {
+        header('HTTP/1.0 503 Service Unavailable');
+    }
+
+    return print($content);
 }
 
 header('Content-type: application/javascript');
