@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Test</title>
+    <style>
+        textarea { width: 100%; }
+    </style>
+    <script src="fuc.js.php"></script>
+    <script>
+        
+        function getAllImages() {
+
+            result.value = '';
+            
+            fetch_url_contents(url.value, 'html').then(function(res){
+
+                var images = res.querySelectorAll('img');
+
+                if (images.length) {
+                    
+                    for(var i = 0;i<images.length;i++) {
+                        result.value += "\n"+images[i].outerHTML;
+                    }
+
+                } else {
+                    result.value = 'No images found!';
+                }
+
+            }).catch(function(){
+                alert("Request failed");
+            });
+        }
+
+        function getContent() {
+
+            result.value = '';
+
+            fetch_url_contents(url.value).then(function(res){
+                result.value = res;
+            }).catch(function(){
+                alert("Request failed");
+            });
+        }
+
+    </script>
+</head>
+<body>
+    
+    <input id="url" type="url" placeholder="http://"> 
+    <button onclick="getContent()">Get Content</button> or 
+    <button onclick="getAllImages()">Gett all Images</button>
+    <br>
+    <br>
+    <div>
+        Result:
+        <textarea id="result" rows="50"></textarea>
+    </div>
+
+</body>
+</html>
