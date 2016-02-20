@@ -43,13 +43,25 @@
             });
         }
 
+        function getJSON() {
+
+            result.value = '';
+
+            fetch_url_contents(url.value).then(function(json){
+                result.value = JSON.stringify(json);
+            }).catch(function(){
+                alert("Request failed");
+            });
+        }
+
     </script>
 </head>
 <body>
     
     <input id="url" type="url" placeholder="http://"> 
     <button onclick="getContent()">Get Content</button> or 
-    <button onclick="getAllImages()">Gett all Images</button>
+    <button onclick="getAllImages()">Get all Images</button> or 
+    <button onclick="getJSON()">Get JSON</button>
     <br>
     <br>
     <div>
